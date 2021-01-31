@@ -1,0 +1,85 @@
+name: Advanced_EAST
+arch:
+  type: Model
+  backbone:
+    type: resnet50
+    pretrained: true
+  neck:
+    type: FPN
+    inner_channels: 256
+  head:
+    type: EASTHead
+    out_channels: 32
+post_processing:
+  type: EastRepresenter
+  args:
+    image_size: 640
+    pixel_thresh: 0.9
+    redution: 4
+    side_vertex_pixel_threshold: 0.9
+    trunc_threshold: 0.1
+metric:
+  type: QuadMetric
+loss:
+  type: QUADLoss
+  epsilon : 0.0001
+  lambda_inside_score_loss : 4.0
+  lambda_side_vertex_code_loss : 1.0
+  lambda_side_vertex_coord_loss : 1.0
+optimizer:
+  type: Adam
+  args:
+    lr: 0.001
+    weight_decay: 0
+    amsgrad: true
+lr_scheduler:
+  type: WarmupPolyLR
+  args:
+    warmup_epoch: 3
+trainer:
+  seed: 2
+  epochs: 600
+  log_iter: 10
+  show_images_iter: 1
+  resume_checkpoint: ''
+  finetune_checkpoint: ''
+  output_dir: ''
+  tensorboard: true
+dataset:
+  train:
+    dataset:
+      type: EASTDataSet
+      args:
+        data_path: G:\datasets\OCR_Data\ICPR_text_train_part2_20180313
+        img_dir: image_train
+        label_dir: txt_train
+        ignore_tags: ['*', '###']
+        shrink_ratio: 0.2
+        shrink_side_ratio: 0.6
+        target_size: 640
+        show_gt_img: True
+        redution: 4
+    loader:
+      batch_size: 6
+      shuffle: true
+      pin_memory: false
+      num_workers: 4
+      collate_fn:
+        type: 'AdvancedEASTCollectFN'
+  validate:
+    dataset:
+      type: EASTDataSet
+      args:
+        data_path: G:\datasets\OCR_Data\ICPR_text_train_part2_20180313
+        img_dir: image_val
+        label_dir: txt_val
+        target_size: 6
+        ignore_tags: ['*', '###']
+        train: false
+    loader:
+      batch_size: 1
+      shuffle: flase
+      pin_memory: false
+      num_workers: 2
+      collate_fn:
+        type: 'AdvancedEASTCollectFN_eval'
