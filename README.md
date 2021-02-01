@@ -1,5 +1,11 @@
-# This rep is pytorch re-implementation of [AdvancedEast](https://github.com/huoyijie/AdvancedEAST), and the project structure reference from [DBNet.pytorch](https://github.com/WenmuZhou/DBNet.pytorch)
+# This repo is pytorch re-implementation of [AdvancedEast](https://github.com/huoyijie/AdvancedEAST), and the project structure reference from [DBNet.pytorch](https://github.com/WenmuZhou/DBNet.pytorch)
 
+## new feature
+
+* more backbone
+* tensorboard
+* eval recall, precision, fmeasure
+* online dataloader
 
 ## Data Preparation
 
